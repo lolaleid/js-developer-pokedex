@@ -19,6 +19,7 @@ function convertPokemonToLi(pokemon) {
                 <img src="${pokemon.photo}"
                      alt="${pokemon.name}">
             </div>
+            <button onClick="showPokemonDetails(this.value)" value="${pokemon}">Detalhes</button>
         </li>
     `
 }
@@ -45,3 +46,26 @@ loadMoreButton.addEventListener('click', () => {
         loadPokemonItens(offset, limit)
     }
 })
+
+function showPokemonDetails(pokemon){
+    let modal = document.getElementById("detailModal");
+    let span = document.getElementsByClassName("close")[0];
+
+    //mostra o modal
+    modal.style.display = "block";
+
+    //fecha o modal se clicar no x
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    //fecha o modal se clicar em qualquer lugar da tela com o modal aberto
+    window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+    }
+
+
+    
+}
