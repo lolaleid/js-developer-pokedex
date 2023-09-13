@@ -19,13 +19,13 @@ function convertPokemonToLi(pokemon) {
                 <img src="${pokemon.photo}"
                      alt="${pokemon.name}">
             </div>
-            <button onClick="showPokemonDetails(this.value)" value="${pokemon}">Detalhes</button>
+            <button onClick="showPokemonDetails(this.value)" value="${ encodeURIComponent(JSON.stringify(pokemon))}">Detalhes</button>
         </li>
     `
 }
 
 function loadPokemonItens(offset, limit) {
-    pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
+    pokeApi.getPokemons(offset, limit).then((pokemons) => {
         const newHtml = pokemons.map(convertPokemonToLi).join('')
         pokemonList.innerHTML += newHtml
     })
@@ -50,9 +50,14 @@ loadMoreButton.addEventListener('click', () => {
 function showPokemonDetails(pokemon){
     let modal = document.getElementById("detailModal");
     let span = document.getElementsByClassName("close")[0];
+    pokemon = JSON.parse(decodeURIComponent(pokemon));
+    const propList = document.getElementById('detailPokemon');
 
     //mostra o modal
     modal.style.display = "block";
+    propList.innerHTML = convertPropToLi(pokemon);
+    
+    
 
     //fecha o modal se clicar no x
     span.onclick = function() {
@@ -65,7 +70,23 @@ function showPokemonDetails(pokemon){
           modal.style.display = "none";
         }
     }
-
-
     
+}
+
+function convertPropToLi(pokemon) {
+    return `
+        <div>
+            <li>Name: ${pokemon.name}</li>
+            <li>Height: ${pokemon.height}</li>
+            <li>Weight: ${pokemon.weight}</li>
+            <span>Types: </span>
+            ${pokemon.types.map((type) => `<li>${type}</li>`).join('')}
+            <span>Abilities: </span>
+            ${pokemon.abilities.map((ability) => `<li>${ability}</li>`).join('')}
+        </div>
+        <div>
+            <img src="${pokemon.photo}" alt="${pokemon.name}">
+        </div>
+        
+    `
 }
